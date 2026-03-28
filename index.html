@@ -1,89 +1,170 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Fatima's 20th Anniversary 👑</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>法提玛 · 皇朝盛典 👑</title>
     <style>
-        :root { --p: #ff85a1; --dp: #f72585; --g: #ffd700; --b: #0a0a0a; }
-        body { background: var(--b); color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; overflow-x: hidden; }
-        #auth-screen { text-align: center; z-index: 100; }
-        .pink-input { background: transparent; border: 2px solid var(--p); color: white; padding: 15px; border-radius: 15px; font-size: 1.2rem; text-align: center; outline: none; box-shadow: 0 0 15px var(--p); margin-bottom: 20px; }
-        #countdown-screen { display: none; text-align: center; font-size: 8rem; color: var(--g); text-shadow: 0 0 30px var(--g); font-family: monospace; }
-        #main-system { display: none; width: 90%; max-width: 600px; text-align: center; padding: 20px 0; }
-        .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border-radius: 30px; padding: 30px; border: 1px solid var(--p); box-shadow: 0 0 40px rgba(255, 133, 161, 0.3); }
-        .hbd-text { font-size: 3rem; font-weight: 900; background: linear-gradient(to right, var(--p), var(--g), var(--dp)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 10px 0; }
-        #gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 25px; }
-        .img-item { width: 100%; height: 200px; object-fit: cover; border-radius: 20px; border: 2px solid var(--p); }
-        .btn { background: linear-gradient(45deg, var(--p), var(--dp)); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
-        .heart { position: fixed; top: -10%; animation: fall linear forwards; z-index: 50; }
-        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
+        :root { --gold: #d4af37; --red: #8b0000; --black: #050505; --fire: #ff4500; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: var(--black); font-family: 'Noto Sans SC', serif; color: white; }
+
+        .screen { position: fixed; width: 100%; height: 100%; display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; transition: 1.5s ease; z-index: 10; }
+        .active { display: flex; animation: fadeIn 1.5s; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* الواجهات */
+        #s1 { background: radial-gradient(circle, var(--red), var(--black)); }
+        .seal { width: 140px; height: 140px; border: 6px double var(--gold); display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--gold); box-shadow: 0 0 30px var(--red); margin-bottom: 20px; }
+        input { background: rgba(0,0,0,0.7); border: 2px solid var(--gold); color: var(--gold); padding: 15px; text-align: center; font-size: 1.2rem; width: 220px; outline: none; }
+        
+        #s2 { font-size: 10rem; color: var(--gold); text-shadow: 0 0 50px var(--gold); }
+        #s3 { background: #0a0a0a; border: 10px double var(--gold); box-sizing: border-box; }
+        
+        /* الصور */
+        .gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 85%; max-width: 450px; }
+        .gallery img { width: 100%; height: 200px; object-fit: cover; border: 2px solid var(--gold); }
+
+        /* تأثير النار */
+        #fire-fx { position: fixed; inset: 0; background: radial-gradient(circle, var(--fire), transparent); display: none; z-index: 100; opacity: 0; mix-blend-mode: screen; }
+        @keyframes fireAnim { 0% { opacity: 0; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } 100% { opacity: 0; transform: scale(1.5); } }
+
+        /* الزخارف */
+        .drop { position: absolute; animation: fall 4s linear infinite; color: var(--gold); z-index: 50; pointer-events: none; }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
+        button { background: var(--gold); color: black; border: none; padding: 15px 40px; font-weight: bold; cursor: pointer; margin-top: 20px; font-size: 1.1rem; }
+        textarea { width: 100%; height: 80px; background: none; border: 1px solid var(--gold); color: white; padding: 10px; margin-top: 10px; text-align: center; }
     </style>
 </head>
 <body>
 
-    <div id="auth-screen">
-        <h2 style="color: var(--p);">أهلاً يا مبرمجة فاطمة 👑</h2>
-        <input type="password" id="pass" class="pink-input" placeholder="كلمة السر">
-        <br>
-        <button class="btn" onclick="checkPass()">فتح المفاجأة 🎁</button>
+    <audio id="bgm" loop><source src="https://files.catbox.moe/cpw960.mp3" type="audio/mpeg"></audio>
+
+    <div id="s1" class="screen active">
+        <div class="seal">法提玛</div>
+        <h2 style="color:var(--gold); letter-spacing: 5px;">至尊皇朝入口</h2>
+        <input type="password" id="pw" placeholder="请输入密码">
+        <button onclick="start()">开启盛典</button>
     </div>
 
-    <div id="countdown-screen">10</div>
+    <div id="s2" class="screen">5</div>
 
-    <div id="main-system">
-        <div class="glass-card">
-            <div class="hbd-text">HAPPY BIRTHDAY FATIMA!</div>
-            <div id="final-timer" style="color: var(--g); font-size: 1.2rem; margin-bottom: 20px; font-family: monospace;"></div>
+    <div id="s3" class="screen">
+        <h1 style="font-size: 4rem; color: var(--gold);">🏮</h1>
+        <h2 style="font-size: 2.5rem;">欢迎临朝</h2>
+        <p style="color: var(--gold);">法提玛女王陛下</p>
+    </div>
 
-            <audio id="player" src="song,mp3.mpeg" loop></audio>
-            
-            <div id="gallery">
-                <img src="jpg.1.jpeg" class="img-item">
-                <img src="jpg.2.jpeg" class="img-item">
-                <img src="jpg.3.jpeg" class="img-item">
-                <img src="jpg.4.jpeg" class="img-item">
-            </div>
+    <div id="s4" class="screen">
+        <div class="gallery">
+            <img src="jpg.1.jpeg"> <img src="jpg.2.jpeg">
+        </div>
+        <h2 style="color:var(--gold); margin-top:20px;">倾城之姿</h2>
+    </div>
+
+    <div id="s5" class="screen">
+        <h1 style="color:var(--fire); font-size: 5rem;">🔥</h1>
+        <h2 style="font-size: 3rem;">圣火庆典</h2>
+    </div>
+
+    <div id="fire-fx"></div>
+
+    <div id="s6" class="screen">
+        <h1 style="font-size: 8rem; color:var(--gold); margin:0;">20</h1>
+        <h2>黄金时代</h2>
+    </div>
+
+    <div id="s7" class="screen">
+        <div class="gallery">
+            <img src="jpg.3.jpeg"> <img src="jpg.4.jpeg">
+        </div>
+        <h2 style="color:var(--gold); margin-top:20px;">绝代风华</h2>
+    </div>
+
+    <div id="s8" class="screen">
+        <div style="border: 2px solid var(--gold); padding: 40px;">
+            <h1 style="font-size: 2.5rem;">荣光永驻</h1>
+            <p>万寿无疆 岁岁平安</p>
+        </div>
+    </div>
+
+    <div id="s9" class="screen">
+        <h1 style="font-size: 4rem;">✨</h1>
+        <h2>星辰大海 唯你最亮</h2>
+    </div>
+
+    <div id="s10" class="screen">
+        <div class="gallery">
+            <img src="jpg.1.jpeg"> <img src="jpg.3.jpeg">
+        </div>
+        <h2 style="color:var(--gold); margin-top:20px;">永恒瞬间</h2>
+    </div>
+
+    <div id="s11" class="screen" style="background: linear-gradient(to bottom, #000, var(--red));">
+        <div style="background: rgba(0,0,0,0.8); padding: 30px; border: 1px solid var(--gold); width: 80%;">
+            <h2 style="color:var(--gold)">皇室密信</h2>
+            <form action="https://formspree.io/f/xpqoqooq" method="POST">
+                <textarea name="msg" placeholder="在此写下您的祝愿..."></textarea><br>
+                <button type="submit">封存发送</button>
+            </form>
         </div>
     </div>
 
     <script>
-        function checkPass() {
-            const p = document.getElementById('pass').value;
-            const player = document.getElementById('player');
-            if(p === "fatima20") {
-                player.play().catch(e => console.log("Audio play failed"));
-                document.getElementById('auth-screen').style.display = 'none';
-                startBigCountdown();
-            } else { alert("كلمة السر: fatima20"); }
+        let cur = 1;
+        const bgm = document.getElementById('bgm');
+
+        function start() {
+            if(document.getElementById('pw').value === "fatima20") {
+                bgm.play();
+                go(2);
+                let c = 5;
+                let t = setInterval(() => {
+                    c--;
+                    document.getElementById('s2').innerText = c;
+                    if(c === 0) { clearInterval(t); go(3); auto(); }
+                }, 1000);
+            } else { alert("密码错误!"); }
         }
 
-        function startBigCountdown() {
-            const screen = document.getElementById('countdown-screen');
-            screen.style.display = 'block';
-            let count = 10;
-            const timer = setInterval(() => {
-                count--;
-                screen.innerText = count;
-                if(count === 0) {
-                    clearInterval(timer);
-                    screen.style.display = 'none';
-                    document.getElementById('main-system').style.display = 'block';
-                    document.getElementById('player').play();
-                    startHearts();
+        function go(n) {
+            document.querySelector('.active').classList.remove('active');
+            document.getElementById('s' + n).classList.add('active');
+            cur = n;
+        }
+
+        function auto() {
+            let saga = setInterval(() => {
+                if(cur < 11) {
+                    if(cur === 4) { // قبل الانتقال من 4 إلى 5 (تأثير النار)
+                        fireEffect();
+                        setTimeout(() => go(5), 500);
+                    } else {
+                        go(cur + 1);
+                    }
+                } else {
+                    clearInterval(saga);
+                    setInterval(drops, 300);
                 }
-            }, 1000);
+            }, 4500);
         }
 
-        function startHearts() {
-            setInterval(() => {
-                const h = document.createElement('div');
-                h.className = 'heart';
-                h.innerHTML = ["🌸", "💖", "✨", "👑"][Math.floor(Math.random()*4)];
-                h.style.left = Math.random() * 100 + "vw";
-                h.style.animationDuration = (Math.random() * 3 + 2) + "s";
-                document.body.appendChild(h);
-                setTimeout(() => h.remove(), 5000);
-            }, 300);
+        function fireEffect() {
+            const f = document.getElementById('fire-fx');
+            f.style.display = 'block';
+            f.style.animation = "fireAnim 1.5s forwards";
+            setTimeout(() => f.style.display = 'none', 1500);
+        }
+
+        function drops() {
+            let d = document.createElement('div');
+            d.className = 'drop';
+            d.innerHTML = ["👑", "🏮", "福", "寿", "喜"][Math.floor(Math.random()*5)];
+            d.style.left = Math.random() * 100 + "vw";
+            d.style.fontSize = "25px";
+            document.body.appendChild(d);
+            setTimeout(() => d.remove(), 4000);
         }
     </script>
 </body>
