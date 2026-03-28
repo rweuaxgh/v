@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>Fatima's 20th Anniversary 👑</title>
+    <style>
+        :root { --p: #ff85a1; --dp: #f72585; --g: #ffd700; --b: #0a0a0a; }
+        body { background: var(--b); color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; overflow-x: hidden; }
+        #auth-screen { text-align: center; z-index: 100; }
+        .pink-input { background: transparent; border: 2px solid var(--p); color: white; padding: 15px; border-radius: 15px; font-size: 1.2rem; text-align: center; outline: none; box-shadow: 0 0 15px var(--p); margin-bottom: 20px; }
+        #countdown-screen { display: none; text-align: center; font-size: 8rem; color: var(--g); text-shadow: 0 0 30px var(--g); font-family: monospace; }
+        #main-system { display: none; width: 90%; max-width: 600px; text-align: center; padding: 20px 0; }
+        .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border-radius: 30px; padding: 30px; border: 1px solid var(--p); box-shadow: 0 0 40px rgba(255, 133, 161, 0.3); }
+        .hbd-text { font-size: 3rem; font-weight: 900; background: linear-gradient(to right, var(--p), var(--g), var(--dp)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 10px 0; }
+        #gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 25px; }
+        .img-item { width: 100%; height: 200px; object-fit: cover; border-radius: 20px; border: 2px solid var(--p); }
+        .btn { background: linear-gradient(45deg, var(--p), var(--dp)); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
+        .heart { position: fixed; top: -10%; animation: fall linear forwards; z-index: 50; }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
+    </style>
+</head>
+<body>
+
+    <div id="auth-screen">
+        <h2 style="color: var(--p);">أهلاً يا مبرمجة فاطمة 👑</h2>
+        <input type="password" id="pass" class="pink-input" placeholder="كلمة السر">
+        <br>
+        <button class="btn" onclick="checkPass()">فتح المفاجأة 🎁</button>
+    </div>
+
+    <div id="countdown-screen">10</div>
+
+    <div id="main-system">
+        <div class="glass-card">
+            <div class="hbd-text">HAPPY BIRTHDAY FATIMA!</div>
+            <div id="final-timer" style="color: var(--g); font-size: 1.2rem; margin-bottom: 20px; font-family: monospace;"></div>
+
+            <audio id="player" src="song,mp3.mpeg" loop></audio>
+            
+            <div id="gallery">
+                <img src="jpg.1.jpeg" class="img-item">
+                <img src="jpg.2.jpeg" class="img-item">
+                <img src="jpg.3.jpeg" class="img-item">
+                <img src="jpg.4.jpeg" class="img-item">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function checkPass() {
+            const p = document.getElementById('pass').value;
+            const player = document.getElementById('player');
+            if(p === "fatima20") {
+                player.play().catch(e => console.log("Audio play failed"));
+                document.getElementById('auth-screen').style.display = 'none';
+                startBigCountdown();
+            } else { alert("كلمة السر: fatima20"); }
+        }
+
+        function startBigCountdown() {
+            const screen = document.getElementById('countdown-screen');
+            screen.style.display = 'block';
+            let count = 10;
+            const timer = setInterval(() => {
+                count--;
+                screen.innerText = count;
+                if(count === 0) {
+                    clearInterval(timer);
+                    screen.style.display = 'none';
+                    document.getElementById('main-system').style.display = 'block';
+                    document.getElementById('player').play();
+                    startHearts();
+                }
+            }, 1000);
+        }
+
+        function startHearts() {
+            setInterval(() => {
+                const h = document.createElement('div');
+                h.className = 'heart';
+                h.innerHTML = ["🌸", "💖", "✨", "👑"][Math.floor(Math.random()*4)];
+                h.style.left = Math.random() * 100 + "vw";
+                h.style.animationDuration = (Math.random() * 3 + 2) + "s";
+                document.body.appendChild(h);
+                setTimeout(() => h.remove(), 5000);
+            }, 300);
+        }
+    </script>
+</body>
+</html>
